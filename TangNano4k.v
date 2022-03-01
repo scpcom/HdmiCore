@@ -144,17 +144,17 @@ module TMDSEncoder(
   reg [3:0] disparityReg; // @[TmdsEncoder.scala 56:29]
   reg [9:0] doutReg; // @[TmdsEncoder.scala 57:24]
   wire [9:0] _GEN_0 = 2'h2 == io_ctrl ? 10'h154 : 10'h2ab; // @[TmdsEncoder.scala 60:13 61:20 64:34]
-  wire [9:0] _doutReg_T_1 = {2'h2,q_m[7:0]}; // @[TmdsEncoder.scala 70:33]
+  wire [7:0] _doutReg_T_1 = ~q_m[7:0]; // @[TmdsEncoder.scala 70:36]
+  wire [9:0] _doutReg_T_2 = {2'h2,_doutReg_T_1}; // @[TmdsEncoder.scala 70:33]
   wire [3:0] _disparityReg_T_2 = $signed(disparityReg) - $signed(diff); // @[TmdsEncoder.scala 71:38]
-  wire [9:0] _doutReg_T_3 = {2'h1,q_m[7:0]}; // @[TmdsEncoder.scala 73:33]
+  wire [9:0] _doutReg_T_4 = {2'h1,q_m[7:0]}; // @[TmdsEncoder.scala 73:33]
   wire [3:0] _disparityReg_T_5 = $signed(disparityReg) + $signed(diff); // @[TmdsEncoder.scala 74:38]
   wire  _T_13 = ~diff[3] & ~disparityReg[3]; // @[TmdsEncoder.scala 76:36]
-  wire [7:0] _doutReg_T_7 = ~q_m[7:0]; // @[TmdsEncoder.scala 78:40]
-  wire [9:0] _doutReg_T_8 = {1'h1,q_m[8],_doutReg_T_7}; // @[TmdsEncoder.scala 78:37]
+  wire [9:0] _doutReg_T_9 = {1'h1,q_m[8],_doutReg_T_1}; // @[TmdsEncoder.scala 78:37]
   wire [3:0] _disparityReg_T_8 = $signed(disparityReg) + 4'sh1; // @[TmdsEncoder.scala 80:38]
   wire [3:0] _disparityReg_T_11 = $signed(_disparityReg_T_8) - $signed(diff); // @[TmdsEncoder.scala 80:44]
   wire [3:0] _GEN_5 = q_m[8] ? $signed(_disparityReg_T_11) : $signed(_disparityReg_T_2); // @[TmdsEncoder.scala 79:19 80:22 82:22]
-  wire [9:0] _doutReg_T_9 = {1'h0,q_m}; // @[TmdsEncoder.scala 85:27]
+  wire [9:0] _doutReg_T_10 = {1'h0,q_m}; // @[TmdsEncoder.scala 85:27]
   wire [3:0] _disparityReg_T_20 = $signed(disparityReg) - 4'sh1; // @[TmdsEncoder.scala 89:38]
   wire [3:0] _disparityReg_T_23 = $signed(_disparityReg_T_20) + $signed(diff); // @[TmdsEncoder.scala 89:44]
   wire [3:0] _GEN_6 = q_m[8] ? $signed(_disparityReg_T_5) : $signed(_disparityReg_T_23); // @[TmdsEncoder.scala 86:19 87:22 89:22]
@@ -187,14 +187,14 @@ module TMDSEncoder(
       end
     end else if ($signed(disparityReg) == 4'sh0 | $signed(diff) == 4'sh0) begin // @[TmdsEncoder.scala 67:47]
       if (~q_m[8]) begin // @[TmdsEncoder.scala 69:31]
-        doutReg <= _doutReg_T_1; // @[TmdsEncoder.scala 70:17]
+        doutReg <= _doutReg_T_2; // @[TmdsEncoder.scala 70:17]
       end else begin
-        doutReg <= _doutReg_T_3; // @[TmdsEncoder.scala 73:17]
+        doutReg <= _doutReg_T_4; // @[TmdsEncoder.scala 73:17]
       end
     end else if (_T_13 | diff[3] & disparityReg[3]) begin // @[TmdsEncoder.scala 77:72]
-      doutReg <= _doutReg_T_8; // @[TmdsEncoder.scala 78:15]
+      doutReg <= _doutReg_T_9; // @[TmdsEncoder.scala 78:15]
     end else begin
-      doutReg <= _doutReg_T_9; // @[TmdsEncoder.scala 85:15]
+      doutReg <= _doutReg_T_10; // @[TmdsEncoder.scala 85:15]
     end
   end
 // Register and memory initialization
