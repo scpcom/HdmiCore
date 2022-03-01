@@ -1,0 +1,4 @@
+(X)Ubuntu 20.04.4 LTS
+Gowin FPGA Designer Version 1.9.8.03
+sbt version in this project: 1.4.9
+sbt script version: 1.6.2

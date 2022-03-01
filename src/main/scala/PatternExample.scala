@@ -14,7 +14,7 @@ case object ptHStripes extends PatternType
 case object ptFrenchFlag extends PatternType
 
 
-class PatternExample(pt: PatternType = ptFrenchFlag) extends Module {
+class PatternExample(pt: PatternType = ptRainbow) extends Module {
   val io = IO(new Bundle {
     val serClk = Input(Clock())
     val tmds = Output(new Tmds())

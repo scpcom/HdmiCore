@@ -10,6 +10,16 @@ import chisel3.stage.{ChiselGeneratorAnnotation, ChiselStage}
 import fpgamacro.gowin.{CLKDIV, TMDS_PLLVR, TLVDS_OBUF}
 import hdmicore.PatternExample
 
+
+
+
+
+
+
+
+
+
+
 class TangNano4k extends RawModule {
 
     /************/
@@ -79,6 +89,10 @@ class TangNano4k extends RawModule {
       O_tmds_clk_n  := buffDiffClk.io.OB
       O_tmds_data_p := buffDiffRed.io.O ## buffDiffGreen.io.O ## buffDiffBlue.io.O
       O_tmds_data_n := buffDiffRed.io.OB ## buffDiffGreen.io.OB ## buffDiffBlue.io.OB
+
+
+
+
     }
 }
 

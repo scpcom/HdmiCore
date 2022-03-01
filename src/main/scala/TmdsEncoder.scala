@@ -21,6 +21,9 @@ class TMDSEncoder extends Module {
       case s => val res = xorfct(VecInit(value.asBools.drop(1)).asUInt)
           value.asBools.head ^ res.asBools.head ## res
     }
+
+
+
   }
   val xored = 1.U(1.W) ## xorfct(io.din)
 
@@ -31,15 +34,21 @@ class TMDSEncoder extends Module {
       case s => val res = xnorfct(VecInit(value.asBools.drop(1)).asUInt)
           !(value.asBools.head ^ res.asBools.head) ## res
     }
+
+
+
   }
   val xnored = 0.U(1.W) ## xnorfct(io.din)
 
   /* use xnored or xored data based on the ones */
+
   val q_m = Mux(
     (n_one_din > 4.U) || (n_one_din === 4.U && io.din(0) === 0.U),
     xnored, xored)
 
   /* ones counter for internal data */
+
+
   val diff = PopCount(q_m).asSInt - 4.S
   val diffSize = diff.getWidth
 
