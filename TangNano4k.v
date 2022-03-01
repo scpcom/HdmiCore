@@ -104,6 +104,7 @@ module TMDSEncoder(
   reg [31:0] _RAND_0;
   reg [31:0] _RAND_1;
   reg [31:0] _RAND_2;
+  reg [31:0] _RAND_3;
 `endif // RANDOMIZE_REG_INIT
   wire [1:0] _n_one_din_T_8 = io_din[0] + io_din[1]; // @[Bitwise.scala 48:55]
   wire [1:0] _n_one_din_T_10 = io_din[2] + io_din[3]; // @[Bitwise.scala 48:55]
@@ -130,8 +131,8 @@ module TMDSEncoder(
   wire  xnored_res_7 = ~(xnored_res_6 ^ io_din[7]); // @[TmdsEncoder.scala 36:17]
   wire [8:0] xnored = {1'h0,xnored_res_7,xnored_res_6,xnored_res_5,xnored_res_4,xnored_res_3,xnored_res_2,xnored_res_1,
     io_din[0]}; // @[TmdsEncoder.scala 39:9]
+  reg [8:0] q_m; // @[TmdsEncoder.scala 44:20]
   wire  _q_m_T_5 = n_one_din > 4'h4 | n_one_din == 4'h4 & ~io_din[0]; // @[TmdsEncoder.scala 46:23]
-  wire [8:0] q_m = _q_m_T_5 ? xnored : xored; // @[TmdsEncoder.scala 45:16]
   reg [3:0] diff; // @[TmdsEncoder.scala 51:21]
   wire [1:0] _diff_T_9 = q_m[0] + q_m[1]; // @[Bitwise.scala 48:55]
   wire [1:0] _diff_T_11 = q_m[2] + q_m[3]; // @[Bitwise.scala 48:55]
@@ -162,6 +163,13 @@ module TMDSEncoder(
   wire [3:0] _GEN_6 = q_m[8] ? $signed(_disparityReg_T_5) : $signed(_disparityReg_T_23); // @[TmdsEncoder.scala 86:19 87:22 89:22]
   assign io_dout = doutReg; // @[TmdsEncoder.scala 93:11]
   always @(posedge clock) begin
+    if (reset) begin // @[TmdsEncoder.scala 44:20]
+      q_m <= 9'h0; // @[TmdsEncoder.scala 44:20]
+    end else if (_q_m_T_5) begin // @[TmdsEncoder.scala 45:13]
+      q_m <= xnored;
+    end else begin
+      q_m <= xored;
+    end
     if (reset) begin // @[TmdsEncoder.scala 51:21]
       diff <= 4'sh0; // @[TmdsEncoder.scala 51:21]
     end else begin
@@ -241,11 +249,13 @@ initial begin
     `endif
 `ifdef RANDOMIZE_REG_INIT
   _RAND_0 = {1{`RANDOM}};
-  diff = _RAND_0[3:0];
+  q_m = _RAND_0[8:0];
   _RAND_1 = {1{`RANDOM}};
-  disparityReg = _RAND_1[3:0];
+  diff = _RAND_1[3:0];
   _RAND_2 = {1{`RANDOM}};
-  doutReg = _RAND_2[9:0];
+  disparityReg = _RAND_2[3:0];
+  _RAND_3 = {1{`RANDOM}};
+  doutReg = _RAND_3[9:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
