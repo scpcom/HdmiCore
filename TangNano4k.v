@@ -614,8 +614,12 @@ module TangNano4k(
   output [1:0] O_led,
   output       O_tmds_clk_p,
   output       O_tmds_clk_n,
-  output [2:0] O_tmds_data_p,
-  output [2:0] O_tmds_data_n,
+  output       O_tmds_data_0_p,
+  output       O_tmds_data_0_n,
+  output       O_tmds_data_1_p,
+  output       O_tmds_data_1_n,
+  output       O_tmds_data_2_p,
+  output       O_tmds_data_2_n,
   input        I_button,
   output       O_trig
 );
@@ -653,8 +657,6 @@ module TangNano4k(
   reg [24:0] counterReg; // @[Counter.scala 62:40]
   wire  wrap_wrap = counterReg == 25'h19bfcbf; // @[Counter.scala 74:24]
   wire [24:0] _wrap_value_T_1 = counterReg + 25'h1; // @[Counter.scala 78:24]
-  wire [1:0] _O_tmds_data_p_T = {buffDiffRed_O,buffDiffGreen_O}; // @[tangnano4k.scala 90:41]
-  wire [1:0] _O_tmds_data_n_T = {buffDiffRed_OB,buffDiffGreen_OB}; // @[tangnano4k.scala 91:42]
   CLKDIV #(.DIV_MODE("5")) clkDiv ( // @[tangnano4k.scala 56:24]
     .RESETN(clkDiv_RESETN),
     .HCLKIN(clkDiv_HCLKIN),
@@ -695,10 +697,14 @@ module TangNano4k(
     .I(buffDiffClk_I)
   );
   assign O_led = {{1'd0}, counterReg >= 25'hcdfe60}; // @[tangnano4k.scala 73:13]
-  assign O_tmds_clk_p = buffDiffClk_O; // @[tangnano4k.scala 88:21]
-  assign O_tmds_clk_n = buffDiffClk_OB; // @[tangnano4k.scala 89:21]
-  assign O_tmds_data_p = {_O_tmds_data_p_T,buffDiffBlue_O}; // @[tangnano4k.scala 90:63]
-  assign O_tmds_data_n = {_O_tmds_data_n_T,buffDiffBlue_OB}; // @[tangnano4k.scala 91:65]
+  assign O_tmds_clk_p = buffDiffClk_O; // @[tangnano4k.scala 88:20]
+  assign O_tmds_clk_n = buffDiffClk_OB; // @[tangnano4k.scala 89:20]
+  assign O_tmds_data_0_p = buffDiffBlue_O; // @[tangnano4k.scala 90:24]
+  assign O_tmds_data_0_n = buffDiffBlue_OB; // @[tangnano4k.scala 91:24]
+  assign O_tmds_data_1_p = buffDiffGreen_O; // @[tangnano4k.scala 92:24]
+  assign O_tmds_data_1_n = buffDiffGreen_OB; // @[tangnano4k.scala 93:24]
+  assign O_tmds_data_2_p = buffDiffRed_O; // @[tangnano4k.scala 94:24]
+  assign O_tmds_data_2_n = buffDiffRed_OB; // @[tangnano4k.scala 95:24]
   assign O_trig = I_button; // @[tangnano4k.scala 45:12]
   assign clkDiv_RESETN = ~glb_rst; // @[tangnano4k.scala 57:25]
   assign clkDiv_HCLKIN = tmdsPllvr_clkout; // @[tangnano4k.scala 50:26 65:16]
