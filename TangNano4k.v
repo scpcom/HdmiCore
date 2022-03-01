@@ -103,6 +103,7 @@ module TMDSEncoder(
 `ifdef RANDOMIZE_REG_INIT
   reg [31:0] _RAND_0;
   reg [31:0] _RAND_1;
+  reg [31:0] _RAND_2;
 `endif // RANDOMIZE_REG_INIT
   wire [1:0] _n_one_din_T_8 = io_din[0] + io_din[1]; // @[Bitwise.scala 48:55]
   wire [1:0] _n_one_din_T_10 = io_din[2] + io_din[3]; // @[Bitwise.scala 48:55]
@@ -131,6 +132,7 @@ module TMDSEncoder(
     io_din[0]}; // @[TmdsEncoder.scala 39:9]
   wire  _q_m_T_5 = n_one_din > 4'h4 | n_one_din == 4'h4 & ~io_din[0]; // @[TmdsEncoder.scala 46:23]
   wire [8:0] q_m = _q_m_T_5 ? xnored : xored; // @[TmdsEncoder.scala 45:16]
+  reg [3:0] diff; // @[TmdsEncoder.scala 51:21]
   wire [1:0] _diff_T_9 = q_m[0] + q_m[1]; // @[Bitwise.scala 48:55]
   wire [1:0] _diff_T_11 = q_m[2] + q_m[3]; // @[Bitwise.scala 48:55]
   wire [2:0] _diff_T_13 = _diff_T_9 + _diff_T_11; // @[Bitwise.scala 48:55]
@@ -139,8 +141,8 @@ module TMDSEncoder(
   wire [1:0] _GEN_13 = {{1'd0}, q_m[6]}; // @[Bitwise.scala 48:55]
   wire [2:0] _diff_T_19 = _GEN_13 + _diff_T_17; // @[Bitwise.scala 48:55]
   wire [2:0] _diff_T_21 = _diff_T_15 + _diff_T_19[1:0]; // @[Bitwise.scala 48:55]
-  wire [3:0] _diff_T_25 = _diff_T_13 + _diff_T_21; // @[TmdsEncoder.scala 52:28]
-  wire [3:0] diff = $signed(_diff_T_25) - 4'sh4; // @[TmdsEncoder.scala 52:35]
+  wire [3:0] _diff_T_25 = _diff_T_13 + _diff_T_21; // @[TmdsEncoder.scala 52:25]
+  wire [3:0] _diff_T_28 = $signed(_diff_T_25) - 4'sh4; // @[TmdsEncoder.scala 52:32]
   reg [3:0] disparityReg; // @[TmdsEncoder.scala 56:29]
   reg [9:0] doutReg; // @[TmdsEncoder.scala 57:24]
   wire [9:0] _GEN_0 = 2'h2 == io_ctrl ? 10'h154 : 10'h2ab; // @[TmdsEncoder.scala 60:13 61:20 64:34]
@@ -160,6 +162,11 @@ module TMDSEncoder(
   wire [3:0] _GEN_6 = q_m[8] ? $signed(_disparityReg_T_5) : $signed(_disparityReg_T_23); // @[TmdsEncoder.scala 86:19 87:22 89:22]
   assign io_dout = doutReg; // @[TmdsEncoder.scala 93:11]
   always @(posedge clock) begin
+    if (reset) begin // @[TmdsEncoder.scala 51:21]
+      diff <= 4'sh0; // @[TmdsEncoder.scala 51:21]
+    end else begin
+      diff <= _diff_T_28; // @[TmdsEncoder.scala 52:8]
+    end
     if (reset) begin // @[TmdsEncoder.scala 56:29]
       disparityReg <= 4'sh0; // @[TmdsEncoder.scala 56:29]
     end else if (~io_en) begin // @[TmdsEncoder.scala 58:26]
@@ -234,9 +241,11 @@ initial begin
     `endif
 `ifdef RANDOMIZE_REG_INIT
   _RAND_0 = {1{`RANDOM}};
-  disparityReg = _RAND_0[3:0];
+  diff = _RAND_0[3:0];
   _RAND_1 = {1{`RANDOM}};
-  doutReg = _RAND_1[9:0];
+  disparityReg = _RAND_1[3:0];
+  _RAND_2 = {1{`RANDOM}};
+  doutReg = _RAND_2[9:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
